@@ -21,9 +21,9 @@ A cinematic, minimalist tourism website showcasing Sri Lanka's destinations with
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies: `npm install`
-3. Start dev server: `npm run dev`
-4. Build for production: `npm run build`
+2. Install dependencies: `pnpm install`
+3. Start dev server: `pnpm run dev`
+4. Build for production: `pnpm run build`
 
 ## Design Tokens
 
