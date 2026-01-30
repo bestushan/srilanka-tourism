@@ -78,6 +78,15 @@ export default function Home() {
       image: "/images/galle-fort-sunset.jpg",
       highlights: ["Historic Fort", "Beach Access", "Local Markets"],
     },
+    {
+      id: 4,
+      name: "Kandy",
+      subtitle: "Sacred City",
+      description: "The former royal capital, home to the sacred Temple of the Sacred Tooth Relic and vibrant local markets.",
+      image: "/images/kandy-temple.webp",
+      highlights: ["Sacred Temple", "Local Markets", "Cultural Heritage"],
+    },
+
   ];
 
   const tourPackages = [

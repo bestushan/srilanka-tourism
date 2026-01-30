@@ -1,14 +1,17 @@
 {
   "name": "sri-lanka-tourism",
   "version": "1.0.0",
+  "homepage": "https://github.com/bestushan/github.io/srilanka-tourism",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "NODE_ENV=production node dist/index.js",
+    "build": "react-scripts build && vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "start": "react-scripts start && NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
+    "predeploy": "pnpm run build",
+    "deploy": "gh-pages -d build",
     "format": "prettier --write ."
   },
   "dependencies": {
