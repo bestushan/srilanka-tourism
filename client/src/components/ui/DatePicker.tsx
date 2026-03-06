@@ -1,53 +1,46 @@
-import * as React from "react";
-import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+"use client";
 
-function ContextMenu({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {
-  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;
+import * as React from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+interface DatePickerProps {
+  date?: Date;
+  setDate: (date?: Date) => void;
 }
-function ContextMenuTrigger({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Trigger>) {
+
+export function DatePicker({ date, setDate }: DatePickerProps) {
   return (
-    <ContextMenuPrimitive.Trigger data-slot="context-menu-trigger" {...props} />
-  );
-}
-function ContextMenuGroup({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Group>) {
-  return (
-    <ContextMenuPrimitive.Group data-slot="context-menu-group" {...props} />
-  );
-}
-function ContextMenuPortal({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Portal>) {
-  return (
-    <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />
-  );
-}
-function ContextMenuSub({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Sub>) {
-  return <ContextMenuPrimitive.Sub data-slot="context-menu-sub" {...props} />;
-}
-function ContextMenuRadioGroup({  ...props }: React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>) {
-  return (
-    <ContextMenuPrimitive.RadioGroup
-      data-slot="context-menu-radio-group"
-      {...props}
-    />
-  );
-}
-function ContextMenuSubTrigger({
-  className,
-  inset,
-  ...props
-}: React.ComponentProps<typeof ContextMenuPrimitive.SubTrigger> & {
-  inset?: boolean;
-}) {
-  return (
-    <ContextMenuPrimitive.SubTrigger
-      data-slot="context-menu-sub-trigger"
-      className={cn(
-        "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
-        inset && "pl-8",
-        className
-      )}
-      {...props}
-    />
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-full justify-start text-left font-normal text-gray-900",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "PPP") : <span>Pick a date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

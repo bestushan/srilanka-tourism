@@ -1,7 +1,16 @@
-import { motion } from "framer-motion";
-import { ChevronDown, MapPin, Calendar, Users } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Calendar, Users, MapPin, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 /**
  * DESIGN PHILOSOPHY: Cinematic Minimalism with Golden Accents
@@ -32,26 +41,17 @@ const itemVariants = {
   },
 };
 
-const fadeInVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 1.2 },
-  },
-};
-
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
+  const [, setLocation] = useLocation();
 
-  const handleScroll = (e: Event) => {
-    const window = e.currentTarget as Window;
-    setScrollY(window.scrollY);
-  };
-
-  useState(() => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  });
+  }, []);
 
   const destinations = [
     {
@@ -61,6 +61,7 @@ export default function Home() {
       description: "An ancient rock fortress rising 200 meters above the jungle, offering breathtaking views and rich history.",
       image: "/images/sigiriya-hero.jpg",
       highlights: ["Ancient Fortress", "Panoramic Views", "Cultural Heritage"],
+      longDescription: "Sigiriya or Sinhagiri is an ancient rock fortress located in the northern Matale District near the town of Dambulla in the Central Province, Sri Lanka. It is a site of historical and archaeological significance that is dominated by a massive column of rock around 180 metres high.",
     },
     {
       id: 2,
@@ -69,6 +70,7 @@ export default function Home() {
       description: "Misty mountains covered in emerald tea plantations, perfect for hiking and experiencing authentic Sri Lankan culture.",
       image: "/images/ella-tea-plantations.jpg",
       highlights: ["Tea Plantations", "Mountain Trails", "Local Villages"],
+      longDescription: "Ella is a small town in the Badulla District of Uva Province, Sri Lanka. It is approximately 200 kilometres east of Colombo and is situated at an elevation of 1,041 metres above sea level. The area has a rich bio-diversity, dense with numerous varieties of flora and fauna.",
     },
     {
       id: 3,
@@ -77,6 +79,7 @@ export default function Home() {
       description: "A UNESCO World Heritage fortress overlooking the Indian Ocean, blending history with pristine beaches.",
       image: "/images/galle-fort-sunset.jpg",
       highlights: ["Historic Fort", "Beach Access", "Local Markets"],
+      longDescription: "Galle is a major city in Sri Lanka, situated on the southwestern tip, 119 km from Colombo. Galle is the administrative capital of Southern Province, Sri Lanka and is the district capital of Galle District.",
     },
     {
       id: 4,
@@ -85,8 +88,35 @@ export default function Home() {
       description: "The former royal capital, home to the sacred Temple of the Sacred Tooth Relic and vibrant local markets.",
       image: "/images/kandy-temple.webp",
       highlights: ["Sacred Temple", "Local Markets", "Cultural Heritage"],
+      longDescription: "Kandy is a large city in central Sri Lanka. It's set on a plateau surrounded by mountains, which are home to tea plantations and biodiverse rainforest. The city's heart is scenic Kandy Lake (Bogambara Lake).",
     },
-
+    {
+      id: 5,
+      name: "Anuradhapura",
+      subtitle: "Ancient Capital",
+      description: "One of the ancient capitals of Sri Lanka, famous for its well-preserved ruins of an ancient Sinhala civilization.",
+      image: "/images/XNJNDdJokE4R.jpg",
+      highlights: ["Sacred Bodhi Tree", "Ruwanwelisaya", "Ancient Monasteries"],
+      longDescription: "Anuradhapura is a major city in Sri Lanka. It is the capital city of North Central Province, Sri Lanka and the capital of Anuradhapura District. Anuradhapura is one of the ancient capitals of Sri Lanka, famous for its well-preserved ruins of an ancient Sinhala civilization.",
+    },
+    {
+      id: 6,
+      name: "Polonnaruwa",
+      subtitle: "Medieval Kingdom",
+      description: "The second most ancient of Sri Lanka's kingdoms, Polonnaruwa was first declared the capital city by King Vijayabahu I.",
+      image: "/images/Lo49JZAvks4h.jpg",
+      highlights: ["Gal Vihara", "Royal Palace", "Parakrama Samudra"],
+      longDescription: "Polonnaruwa is the main town of Polonnaruwa District in North Central Province, Sri Lanka. Kaduruwela area is the Polonnaruwa New Town and the other part of Polonnaruwa remains as the royal ancient city of the Kingdom of Polonnaruwa.",
+    },
+    {
+      id: 7,
+      name: "Dambulla",
+      subtitle: "Cave Temple",
+      description: "Home to the largest and best-preserved cave temple complex in Sri Lanka, featuring stunning Buddhist murals and statues.",
+      image: "/images/hxn3BDuCX5Rn.jpg",
+      highlights: ["Golden Temple", "Cave Murals", "Rock Inscriptions"],
+      longDescription: "Dambulla cave temple also known as the Golden Temple of Dambulla is a World Heritage Site in Sri Lanka, situated in the central part of the country. This site is situated 148 kilometres east of Colombo and 72 kilometres north of Kandy.",
+    },
   ];
 
   const tourPackages = [
@@ -140,7 +170,10 @@ export default function Home() {
           <a href="#tours" className="text-sm hover:text-accent transition-colors">
             Tours
           </a>
-          <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button
+            className="bg-accent text-accent-foreground hover:bg-accent/90"
+            onClick={() => setLocation("/booking")}
+          >
             Book Now
           </Button>
         </motion.div>
@@ -183,7 +216,7 @@ export default function Home() {
 
           <motion.h1
             variants={itemVariants}
-            className="text-8xl md:text-9xl font-bold mb-6 leading-none"
+            className="text-8xl md:text-9xl font-bold mb-6 leading-none text-white"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             SRI LANKA
@@ -191,19 +224,24 @@ export default function Home() {
 
           <motion.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-muted mb-8 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto"
           >
             Experience the enchantment of ancient temples, misty mountains, pristine beaches, and vibrant culture.
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex gap-4 justify-center">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+              onClick={() => document.getElementById('tours')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               Explore Tours
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-accent text-accent hover:bg-accent/10"
+              className="border-accent text-accent hover:bg-accent/10 bg-black/20"
+              onClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Learn More
             </Button>
@@ -217,7 +255,7 @@ export default function Home() {
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="flex flex-col items-center gap-2">
-            <span className="text-sm text-muted">Scroll to Explore</span>
+            <span className="text-sm text-white/70">Scroll to Explore</span>
             <ChevronDown className="w-6 h-6 text-accent" />
           </div>
         </motion.div>
@@ -253,7 +291,7 @@ export default function Home() {
                 className="group"
               >
                 {/* Image */}
-                <div className="relative h-96 mb-8 overflow-hidden">
+                <div className="relative h-96 mb-8 overflow-hidden rounded-lg">
                   <motion.img
                     src={destination.image}
                     alt={destination.name}
@@ -266,7 +304,7 @@ export default function Home() {
 
                 {/* Content */}
                 <div>
-                  <span className="text-accent text-sm tracking-widest font-semibold">
+                  <span className="text-accent text-sm tracking-widest font-semibold uppercase">
                     {destination.subtitle}
                   </span>
                   <h3
@@ -275,7 +313,7 @@ export default function Home() {
                   >
                     {destination.name}
                   </h3>
-                  <p className="text-muted mb-6 text-lg leading-relaxed">
+                  <p className="text-muted-foreground mb-6 text-lg leading-relaxed">
                     {destination.description}
                   </p>
 
@@ -284,16 +322,61 @@ export default function Home() {
                     {destination.highlights.map((highlight) => (
                       <span
                         key={highlight}
-                        className="px-4 py-2 bg-secondary text-foreground text-sm font-medium"
+                        className="px-4 py-2 bg-secondary text-secondary-foreground text-sm font-medium rounded-full"
                       >
                         {highlight}
                       </span>
                     ))}
                   </div>
 
-                  <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    Explore →
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                        Explore →
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-3xl bg-background border-accent/20">
+                      <DialogHeader>
+                        <DialogTitle className="text-4xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          {destination.name}
+                        </DialogTitle>
+                        <DialogDescription className="text-accent font-semibold tracking-widest uppercase">
+                          {destination.subtitle}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="mt-4 space-y-6">
+                        <div className="aspect-video overflow-hidden rounded-lg">
+                          <img src={destination.image} alt={destination.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="space-y-4">
+                          <h4 className="text-xl font-bold">About {destination.name}</h4>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {destination.longDescription}
+                          </p>
+                          <div className="grid grid-cols-2 gap-4 pt-4">
+                            <div className="space-y-2">
+                              <h5 className="font-bold text-accent">Top Highlights</h5>
+                              <ul className="space-y-1">
+                                {destination.highlights.map(h => (
+                                  <li key={h} className="text-sm flex items-center gap-2">
+                                    <span className="w-1 h-1 bg-accent rounded-full" /> {h}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="flex flex-col justify-end">
+                              <Button
+                                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                                onClick={() => setLocation(`/booking?destination=${destination.name}`)}
+                              >
+                                Book Now
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </motion.div>
             ))}
@@ -328,7 +411,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-background border border-border p-8 hover:border-accent transition-colors duration-300 group"
+                className="bg-background border border-border p-8 hover:border-accent transition-colors duration-300 group rounded-lg"
               >
                 <div className="mb-6">
                   <h3
@@ -340,20 +423,20 @@ export default function Home() {
                   <p className="text-accent text-lg font-semibold">{pkg.price}</p>
                 </div>
 
-                <div className="flex gap-4 mb-6 text-sm text-muted">
+                <div className="flex gap-4 mb-6 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     <span>{pkg.duration}</span>
                   </div>
                 </div>
 
-                <p className="text-muted mb-6 leading-relaxed">{pkg.description}</p>
+                <p className="text-muted-foreground mb-6 leading-relaxed">{pkg.description}</p>
 
                 <div className="mb-8">
                   <p className="text-sm font-semibold text-accent mb-3">Includes:</p>
                   <ul className="space-y-2">
                     {pkg.includes.map((item) => (
-                      <li key={item} className="text-sm text-muted flex items-center gap-2">
+                      <li key={item} className="text-sm text-muted-foreground flex items-center gap-2">
                         <span className="w-1.5 h-1.5 bg-accent rounded-full" />
                         {item}
                       </li>
@@ -361,7 +444,10 @@ export default function Home() {
                   </ul>
                 </div>
 
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 group-hover:translate-y-[-2px] transition-transform">
+                <Button
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 group-hover:translate-y-[-2px] transition-transform"
+                  onClick={() => setLocation(`/booking?package=${pkg.title}`)}
+                >
                   Book Package
                 </Button>
               </motion.div>
@@ -385,14 +471,23 @@ export default function Home() {
           >
             Ready for Your Adventure?
           </h2>
-          <p className="text-xl text-muted mb-8">
+          <p className="text-xl text-muted-foreground mb-8">
             Let us craft your perfect Sri Lankan experience. Contact us today for custom tour arrangements.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+              onClick={() => setLocation("/booking")}
+            >
               Get in Touch
             </Button>
-            <Button size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-accent text-accent hover:bg-accent/10"
+              onClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               View Itineraries
             </Button>
           </div>
@@ -405,29 +500,29 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <h4 className="font-bold mb-4">About</h4>
-              <p className="text-sm text-muted">
+              <p className="text-sm text-muted-foreground">
                 Discover the magic of Sri Lanka with expertly curated tours and unforgettable experiences.
               </p>
             </div>
             <div>
               <h4 className="font-bold mb-4">Destinations</h4>
-              <ul className="space-y-2 text-sm text-muted">
-                <li><a href="#" className="hover:text-accent transition-colors">Sigiriya</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Ella</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Galle</a></li>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#destinations" className="hover:text-accent transition-colors">Sigiriya</a></li>
+                <li><a href="#destinations" className="hover:text-accent transition-colors">Ella</a></li>
+                <li><a href="#destinations" className="hover:text-accent transition-colors">Galle</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-4">Tours</h4>
-              <ul className="space-y-2 text-sm text-muted">
-                <li><a href="#" className="hover:text-accent transition-colors">Cultural Triangle</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Tea & Mountains</a></li>
-                <li><a href="#" className="hover:text-accent transition-colors">Coastal Escape</a></li>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#tours" className="hover:text-accent transition-colors">Cultural Triangle</a></li>
+                <li><a href="#tours" className="hover:text-accent transition-colors">Tea & Mountains</a></li>
+                <li><a href="#tours" className="hover:text-accent transition-colors">Coastal Escape</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-muted">
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>Email: info@srilanka-tours.com</li>
                 <li>Phone: +94 123 456 789</li>
                 <li>Colombo, Sri Lanka</li>
@@ -435,7 +530,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-border pt-8 flex justify-between items-center text-sm text-muted">
+          <div className="border-t border-border pt-8 flex justify-between items-center text-sm text-muted-foreground">
             <p>&copy; 2026 Sri Lanka Tourism. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-accent transition-colors">Privacy</a>
